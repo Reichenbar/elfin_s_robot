@@ -93,6 +93,7 @@ include_directories(
 )
 
 ## Declare a C++ library
+# add_library(${PROJECT_NAME} src/collision_free_moti11on_planning_node.cpp)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
