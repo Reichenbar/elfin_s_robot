@@ -1,0 +1,9 @@
+<launch>
+
+  <include file="$(find elfin_gazebo)/launch/elfin_s20_with_gripper_empty_world.launch"/>
+  <include file="$(find elfin_s20_with_gripper_moveit_config)/launch/moveit_planning_execution.launch"/>
+  <include file="$(find elfin_basic_api)/launch/elfin_basic_api.launch"/>
+
+  <node name="server" pkg="collision_free_motion_planning" type="server.py" output="screen" />
+
+</launch>

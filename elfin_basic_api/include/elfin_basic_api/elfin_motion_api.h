@@ -59,6 +59,8 @@ Created on Mon Nov 27 14:24:30 2017
 #include <elfin_basic_api/elfin_basic_api_const.h>
 #include <tf/transform_listener.h>
 #include <tf_conversions/tf_eigen.h>
+#include <elfin_basic_api/ReachEEPose.h>
+#include <elfin_basic_api/ReachJointState.h>
 
 namespace elfin_basic_api {
 
@@ -73,6 +75,8 @@ public:
     bool getRefLink_cb(std_srvs::SetBool::Request &req, std_srvs::SetBool::Response &resp);
     bool getEndLink_cb(std_srvs::SetBool::Request &req, std_srvs::SetBool::Response &resp);
     void torquesPubTimer_cb(const ros::TimerEvent& evt);
+    bool reachJointState_cb(elfin_basic_api::ReachJointState::Request &req, elfin_basic_api::ReachJointState::Response &resp);
+    bool reachEEPose_cb(elfin_basic_api::ReachEEPose::Request &req, elfin_basic_api::ReachEEPose::Response &resp);
 
     void setVelocityScaling(double data);
     void setRefFrames(std::string ref_link);
@@ -109,6 +113,8 @@ private:
     ros::ServiceServer get_reference_link_server_;
     ros::ServiceServer get_end_link_server_;
     ros::ServiceServer get_torques_server_;
+    ros::ServiceServer reach_joint_state_server_;
+    ros::ServiceServer reach_ee_pose_server_;
 
     ros::Timer torques_publisher_timer_;
     ros::Publisher torques_publisher_;

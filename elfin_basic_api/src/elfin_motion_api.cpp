@@ -60,6 +60,8 @@ ElfinMotionAPI::ElfinMotionAPI(moveit::planning_interface::MoveGroupInterface *g
 
     get_reference_link_server_=motion_nh_.advertiseService("get_reference_link", &ElfinMotionAPI::getRefLink_cb, this);
     get_end_link_server_=motion_nh_.advertiseService("get_end_link", &ElfinMotionAPI::getEndLink_cb, this);
+    reach_joint_state_server_=motion_nh_.advertiseService("reach_joint_state", &ElfinMotionAPI::reachJointState_cb, this);
+    reach_ee_pose_server_=motion_nh_.advertiseService("reach_ee_pose", &ElfinMotionAPI::reachEEPose_cb, this);
 
     bool torques_publisher_flag=motion_nh_.param<bool>("torques_publish", false);
     double torques_publisher_period=motion_nh_.param<double>("torques_publish_period", 0.02);
@@ -214,6 +216,77 @@ bool ElfinMotionAPI::getEndLink_cb(std_srvs::SetBool::Request &req, std_srvs::Se
 {
     resp.success=true;
     resp.message=end_link_;
+    return true;
+}
+
+bool ElfinMotionAPI::reachJointState_cb(elfin_basic_api::ReachJointState::Request &req, elfin_basic_api::ReachJointState::Response &resp)
+{
+    if(group_->setJointValueTarget(req.joint_state)) // If these values are out of bounds then false is returned.
+    {   
+        moveit::planning_interface::MoveGroupInterface::Plan joint_plan;
+        if(group_->plan(joint_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS)
+        {
+            group_->move(); // This is a blocking call that waits for the execution to complete
+            resp.success=true;
+        }
+        else
+        {
+            ROS_WARN("planning failure");
+            resp.success=false;
+        }
+    }
+    else
+    {
+        ROS_WARN("the robot cannot execute that motion");
+        resp.success=false;
+    }
+    return true;
+}
+
+bool ElfinMotionAPI::reachEEPose_cb(elfin_basic_api::ReachEEPose::Request &req, elfin_basic_api::ReachEEPose::Response &resp)
+{
+    std::string reference_link=reference_link_;
+    if(req.pose_stamped.header.frame_id.empty())
+    {
+        reference_link=req.pose_stamped.header.frame_id;
+    }
+
+    if(!updateTransforms(reference_link))
+        return false;
+
+    Eigen::Isometry3d affine_rootToRef, affine_refToRoot;
+    tf::transformTFToEigen(transform_rootToRef_, affine_rootToRef);
+    affine_refToRoot=affine_rootToRef.inverse();
+
+    Eigen::Isometry3d affine_tipToEnd;
+    tf::transformTFToEigen(transform_tipToEnd_, affine_tipToEnd);
+
+    tf::Pose tf_pose_tmp;
+    Eigen::Isometry3d affine_pose_tmp;
+    tf::poseMsgToTF(req.pose_stamped.pose, tf_pose_tmp);
+    tf::poseTFToEigen(tf_pose_tmp, affine_pose_tmp);
+
+    Eigen::Isometry3d affine_pose_goal=affine_refToRoot * affine_pose_tmp * affine_tipToEnd;
+
+    if(group_->setPoseTarget(affine_pose_goal))
+    {
+        moveit::planning_interface::MoveGroupInterface::Plan cart_plan;
+        if(group_->plan(cart_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS)
+        {
+            group_->move();
+            resp.success=true;
+        }
+        else
+        {
+            ROS_WARN("planning failure");
+            resp.success=false;
+        }
+    }
+    else
+    {
+        ROS_WARN("the robot cannot execute that motion");
+        resp.success=false;
+    }
     return true;
 }
 
