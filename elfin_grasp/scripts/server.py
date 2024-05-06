@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
-from collision_free_motion_planning.srv import ReachEEPose, ReachEEPoseResponse
-from collision_free_motion_planning.srv import ReachJointState, ReachJointStateResponse
-from collision_free_motion_planning.srv import AddCollisionObj, AddCollisionObjResponse
-from collision_free_motion_planning.srv import AddBox, AddBoxResponse
-from collision_free_motion_planning.srv import RemoveCollisionObj, RemoveCollisionObjResponse
+from elfin_grasp.srv import ReachEEPose, ReachEEPoseResponse
+from elfin_grasp.srv import ReachJointState, ReachJointStateResponse
+from elfin_grasp.srv import AddCollisionObj, AddCollisionObjResponse
+from elfin_grasp.srv import AddBox, AddBoxResponse
+from elfin_grasp.srv import RemoveCollisionObj, RemoveCollisionObjResponse
 import rospy
 import moveit_commander
 import sys

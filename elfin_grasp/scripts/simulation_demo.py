@@ -2,9 +2,9 @@
 
 from elfin_basic_api.srv import ReachEEPose, ReachEEPoseRequest
 from elfin_basic_api.srv import ReachJointState, ReachJointStateRequest
-from collision_free_motion_planning.srv import AddCollisionObj, AddCollisionObjRequest
-from collision_free_motion_planning.srv import AddBox, AddBoxRequest
-from collision_free_motion_planning.srv import RemoveCollisionObj, RemoveCollisionObjRequest
+from elfin_grasp.srv import AddCollisionObj, AddCollisionObjRequest
+from elfin_grasp.srv import AddBox, AddBoxRequest
+from elfin_grasp.srv import RemoveCollisionObj, RemoveCollisionObjRequest
 import rospy
 import moveit_commander
 import sys
