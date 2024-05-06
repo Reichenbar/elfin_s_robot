@@ -1,19 +1,14 @@
 #!/usr/bin/env python
 
+import os
+import math
+import rospy
+from geometry_msgs.msg import Pose, PoseStamped
+from sensor_msgs.msg import JointState
 from elfin_basic_api.srv import ReachEEPose, ReachEEPoseRequest
 from elfin_basic_api.srv import ReachJointState, ReachJointStateRequest
 from elfin_grasp.srv import AddCollisionObj, AddCollisionObjRequest
-from elfin_grasp.srv import AddBox, AddBoxRequest
 from elfin_grasp.srv import RemoveCollisionObj, RemoveCollisionObjRequest
-import rospy
-import moveit_commander
-import sys
-from geometry_msgs.msg import Pose, PoseStamped
-from sensor_msgs.msg import JointState
-import os
-import math
-
-
 
 def reach_ee_pose(ee_pose: list):
     reach_ee_pose_proxy = rospy.ServiceProxy('/elfin_basic_api/reach_ee_pose', ReachEEPose)
@@ -86,31 +81,6 @@ def add_collision_obj(mesh_name: str, mesh_pose: list, relative_mesh_path):
         rospy.logwarn("Service [add_collision_obj] call failed")
 
 
-def add_box(box_pose: list):
-    add_box_proxy = rospy.ServiceProxy('add_box', AddBox)
-    rospy.wait_for_service('add_box')
-    add_box_req = AddBoxRequest()
-    # mesh pose setting
-    collision_obj_pose_stamped = PoseStamped()
-    collision_obj_pose_stamped.header.stamp=rospy.get_rostime()
-    collision_obj_pose_stamped.header.frame_id = "world"
-    collision_obj_pose_stamped.pose.position.x = box_pose[0]
-    collision_obj_pose_stamped.pose.position.y = box_pose[1]
-    collision_obj_pose_stamped.pose.position.z = box_pose[2]
-    collision_obj_pose_stamped.pose.orientation.x = box_pose[3]
-    collision_obj_pose_stamped.pose.orientation.y = box_pose[4]
-    collision_obj_pose_stamped.pose.orientation.z = box_pose[5]
-    collision_obj_pose_stamped.pose.orientation.w = box_pose[6]
-    # service setting
-    add_box_req.pose_stamped = collision_obj_pose_stamped
-    add_box_res = add_box_proxy(add_box_req)
-    if add_box_res.success:
-        rospy.loginfo("Service [add_box] call was successful")
-    else:
-        rospy.logwarn("Service [add_box] call failed")
-
-
-
 def remove_collision_obj(obj_name: str):
     remove_collision_obj_proxy = rospy.ServiceProxy('remove_collision_obj', RemoveCollisionObj)
     rospy.wait_for_service('remove_collision_obj')
@@ -138,6 +108,8 @@ def reach_base_state(joint_pos: list):
         rospy.loginfo("Service [reach_base_state] call was successful")
     else:
         rospy.logwarn("Service [reach_base_state] call failed")
+
+
 
 def main():
     rospy.init_node("simulation_demo", anonymous=True)
@@ -249,40 +221,6 @@ def main():
     input("Remove the washer from the planning scene.")
     remove_collision_obj("washer")
     remove_collision_obj("filling_basket_1")
-
-
-def check_box_pose():
-    rospy.init_node("simulation_demo", anonymous=True)
-    reach_joint_state([0.0, -1.57, 1.57, -1.57, -1.57, 0.0])
-    import numpy as np
-    box_pos_example = np.array([0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0])
-    corner_pos_example = np.array([[-0.2532, 1.1227, 1.1731, 0.5261, 0.5071, 0.6702, -0.1300],
-                                 [0.2587, 1.1340, 1.1719, 0.7027, 0.0695, 0.6179, 0.3458],
-                                 [0.2358, 0.8215, 1.1521, 0.3930, -0.5468, 0.0993, 0.7326],
-                                 [-0.2396, 0.9006, 1.1598, -0.1575, -0.7121, -0.4386, 0.5251]])
-    ee_pos_example = np.array([-0.2848, 1.0479, 1.628, 0.4402, 0.5534, 0.6579, -0.2591])
-    corner_pos_local = corner_pos_example-box_pos_example
-    ee_pos_local = ee_pos_example-box_pos_example
-
-    box_pos = np.array([0.0, 1.35, 0.6, 0.0, 0.0, 0.0, 0.0]) # y-max 1.35, y-min 0.8
-    corner_pos_global = corner_pos_local+box_pos
-    print(corner_pos_global)
-    ee_pos_global = ee_pos_local+box_pos
-    input("1")
-    add_collision_obj("filling_basket", box_pos[:3].tolist()+[0.707, 0.0, 0.0, 0.707], "../collision_objects/basket.stl")
-    input("2")
-    # reach_ee_pose(ee_pos_global.tolist())
-    # reach_joint_state([item/180*math.pi for item in [-92, -48, 33, -5, 29, 3]]) # y-max
-    reach_joint_state([item/180*math.pi for item in [-92, -83, 80, 3, 27, 0]]) # y-min
-    for i in range(corner_pos_global.shape[0]):
-        input(f"Corner {i}")
-        reach_ee_pose(corner_pos_global[i, :].tolist())
-    input("3")
-    remove_collision_obj()
-
-
-
-
 
 
 if __name__ == "__main__":
