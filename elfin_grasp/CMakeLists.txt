@@ -44,11 +44,9 @@ find_package(catkin REQUIRED COMPONENTS
 # Generate services in the 'srv' folder
 add_service_files(
   FILES
-  ReachEEPose.srv
   ReachJointState.srv
   AddCollisionObj.srv
   RemoveCollisionObj.srv
-  AddBox.srv
 )
 
 ## Generate actions in the 'action' folder
@@ -119,6 +117,6 @@ include_directories(
 
 
 
-catkin_install_python(PROGRAMS scripts/server.py scripts/simulation_demo.py
+catkin_install_python(PROGRAMS scripts/elfin_grasp_server.py scripts/simulation_demo.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
