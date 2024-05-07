@@ -4,7 +4,7 @@ Check the parameters in the `elfin_drivers.yaml` file. The parameter `elfin_ethe
 # Preparation
 1. Turn on the switch. Ensure the robot is connected to the control box with the black LAN cable and press the **POWER** button on the control box to turn on the robot.
 
-2. Get access to the user control interface (Wifi: NA308020005, 192.168.2.1/dist).
+2. Get access to the user control interface using the tablet. Connect to Wifi NA308020005. Type 192.168.2.1/dist in the browser search bar.
 * Username: admin
 * Password: admin
 
@@ -37,7 +37,7 @@ roslaunch elfin_robot_bringup elfin_ros_control.launch
 ```
 cd softman_ws
 source devel/setup.bash
-roslaunch elfin_s20_moveit_config moveit_planning_execution.launch
+roslaunch elfin_s20_with_gripper_moveit_config moveit_planning_execution.launch
 ```
 
 10. In the fourth terminal:
