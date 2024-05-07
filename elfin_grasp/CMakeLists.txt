@@ -117,7 +117,11 @@ include_directories(
 ## Specify libraries to link a library or executable target against
 
 
-
-catkin_install_python(PROGRAMS scripts/elfin_grasp_server.py scripts/simulation_demo.py
-  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+catkin_install_python(
+  PROGRAMS 
+  scripts/elfin_with_base_gripper_server.py 
+  scripts/elfin_with_gripper_server.py 
+  scripts/simulation_demo.py
+  DESTINATION 
+  ${CATKIN_PACKAGE_BIN_DESTINATION}
 )

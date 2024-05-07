@@ -19,6 +19,7 @@
         <joint name="elfin_joint6"/>
         <joint name="elfin_end_joint"/>
         <joint name="gripper_joint"/>
+        <joint name="tcp_joint"/>
     </group>
     <group name="elfin_base">
         <joint name="mobile_base_joint1"/>

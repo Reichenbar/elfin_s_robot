@@ -362,4 +362,11 @@
     <parent link="elfin_end_link"/>
     <child link="real_gripper"/>
   </joint>
+  <link name="tcp_link">
+  </link>
+  <joint name="tcp_joint" type="fixed">
+    <origin rpy="-0.5236 0 0" xyz="0 0.45456 -0.02363"/>
+    <parent link="real_gripper"/>
+    <child link="tcp_link"/>
+  </joint>
 </robot>
