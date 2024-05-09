@@ -113,6 +113,19 @@ def reach_base_state(joint_pos: list):
 
 def main():
     rospy.init_node("simulation_demo", anonymous=True)
+    input("home.")
+    reach_joint_state([item/180*math.pi for item in [90, -135, 120, -75, -90, 0]])
+    input("initial.")
+    reach_joint_state([item/180*math.pi for item in [90, -105, 85, -40, -90, 0]])
+    input("grasp.")
+    reach_joint_state([item/180*math.pi for item in [80, -65, 100, -75, -90, 0]])
+    input("Back to initial.")
+    reach_joint_state([item/180*math.pi for item in [90, -105, 85, -40, -90, 0]])
+
+
+
+
+
     input("Add the washer to the planning scene.")
     add_collision_obj("washer", [2.0, 0.0, 1.5, 0.0, 0.0, -0.707, 0.707], "../collision_objects/washer.stl")
     input("The manipulator goes to the initial state.")

@@ -201,7 +201,7 @@
     </inertial>
   </link>
   <joint name="elfin_fixed_joint" type="fixed">
-    <origin rpy="-1.57 -3.14 0" xyz="0 0 0"/>
+    <origin rpy="-1.57 -3.14 0" xyz="-0.05 0 0"/>
     <parent link="mobile_base_link2"/>
     <child link="elfin_base_link"/>
   </joint>
@@ -256,7 +256,7 @@
     </collision>
   </link>
   <joint name="elfin_joint1" type="revolute">
-    <origin rpy="0 0 0" xyz="0 0 0.171"/>
+    <origin rpy="0 0 -1.57" xyz="0 0 0.171"/>
     <parent link="elfin_base"/>
     <child link="elfin_link1"/>
     <axis xyz="0 0 1"/>

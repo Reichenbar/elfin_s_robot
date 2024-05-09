@@ -1,5 +1,7 @@
 # Configuration
-Check the parameters in the `elfin_drivers.yaml` file. The parameter `elfin_ethernet_name` should be the same as the Ethernet name shown in Ubuntu Settings-Network.
+* Use the workspace `elfin_ws`.
+* Use real time kernel `5.15.0-94-generic`.
+* Check the parameters in the `elfin_drivers.yaml` file. The parameter `elfin_ethernet_name` should be the same as the Ethernet name shown in Ubuntu Settings-Network.
 
 # Preparation
 1. Turn on the switch. Ensure the robot is connected to the control box with the black LAN cable and press the **POWER** button on the control box to turn on the robot.
